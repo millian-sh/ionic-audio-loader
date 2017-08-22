@@ -7,7 +7,7 @@ import { AudioLoaderConfig } from '../providers/audio-loader-config';
   template: '<ion-spinner *ngIf="spinner && isLoading && !fallbackAsPlaceholder" [name]="spinnerName" [color]="spinnerColor"></ion-spinner>',
   styles: ['ion-spinner { float: none; margin-left: auto; margin-right: auto; display: block; }']
 })
-export class AudioLoader implements OnInit {
+export class AudLoader implements OnInit {
 
   /**
    * The URL of the audio to load.
@@ -103,7 +103,7 @@ export class AudioLoader implements OnInit {
    * Notify on audio load..
    */
   @Output()
-  load: EventEmitter<ImgLoader> = new EventEmitter<ImgLoader>();
+  load: EventEmitter<AudLoader> = new EventEmitter<AudLoader>();
 
   /**
    * Indicates if the audio is still loading

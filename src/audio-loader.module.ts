@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { ImgLoader } from './components/audio-loader';
-import { ImageLoader } from './providers/audio-loader';
+import { AudLoader } from './components/audio-loader';
+import { AudioLoader } from './providers/audio-loader';
 import { ImageLoaderConfig } from './providers/audio-loader-config';
 import { IonicModule } from 'ionic-angular';
 import { File } from '@ionic-native/file';
@@ -8,13 +8,13 @@ import { FileTransfer } from '@ionic-native/file-transfer';
 
 @NgModule({
   declarations: [
-    AudioLoader
+    AudLoader
   ],
   imports: [
     IonicModule
   ],
   exports: [
-    AudioLoader
+    AudLoader
   ]
 })
 export class IonicAudioLoader {
