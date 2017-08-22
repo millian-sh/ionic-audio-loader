@@ -193,7 +193,7 @@ export class AudLoader implements OnInit {
 
     // set it's src
     this._renderer.setElementAttribute(this.element, 'src', audioUrl);
-    this._renderer.setElementAttribute(this.element, 'controls', null);
+    this._renderer.setElementAttribute(this.element, 'controls', 'true');
 
     if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
       this._renderer.setElementAttribute(this.element, 'onerror', `this.src="${ this.fallbackUrl }"`);
