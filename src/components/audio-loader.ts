@@ -155,7 +155,6 @@ export class AudLoader implements OnInit {
    */
   private processAudioUrl(audioUrl: string): string {
 
-
     if (this.cache === false) {
       // need to disable caching
 
@@ -185,7 +184,7 @@ export class AudLoader implements OnInit {
 
     this.isLoading = !stopLoading;
 
-    console.log('creating audio attribute');
+    console.log('isLoading: ' + this.isLoading);
 
     if (!this.element) {
       // create img element if we dont have one
@@ -199,6 +198,9 @@ export class AudLoader implements OnInit {
     if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
       this._renderer.setElementAttribute(this.element, 'onerror', `this.src="${ this.fallbackUrl }"`);
     }
+
+    console.log('creating audio attribute');
+    console.log(this.element);
 
     this.load.emit(this);
 
