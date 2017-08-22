@@ -152,16 +152,19 @@ var AudLoader = (function () {
     AudLoader.prototype.setAudio = function (audioUrl, stopLoading) {
         if (stopLoading === void 0) { stopLoading = true; }
         this.isLoading = !stopLoading;
-        console.log('creating audio attribute');
+        console.log('isLoading: ' + this.isLoading);
         if (!this.element) {
             // create img element if we dont have one
             this.element = this._renderer.createElement(this._element.nativeElement, 'audio');
         }
         // set it's src
         this._renderer.setElementAttribute(this.element, 'src', audioUrl);
+        this._renderer.setElementAttribute(this.element, 'controls', null);
         if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
             this._renderer.setElementAttribute(this.element, 'onerror', "this.src=\"" + this.fallbackUrl + "\"");
         }
+        console.log('creating audio attribute');
+        console.log(this._element.nativeElement);
         this.load.emit(this);
     };
     return AudLoader;
