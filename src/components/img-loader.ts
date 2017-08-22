@@ -182,7 +182,7 @@ export class AudioLoader implements OnInit {
       // Using <img> tag
       if (!this.element) {
         // create img element if we dont have one
-        this.element = this._renderer.createElement(this._element.nativeElement, 'img');
+        this.element = this._renderer.createElement(this._element.nativeElement, 'audio');
       }
 
       // set it's src
