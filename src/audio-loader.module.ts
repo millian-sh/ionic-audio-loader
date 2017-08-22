@@ -1,29 +1,29 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { ImgLoader } from './components/img-loader';
-import { ImageLoader } from './providers/image-loader';
-import { ImageLoaderConfig } from './providers/image-loader-config';
+import { ImgLoader } from './components/audio-loader';
+import { ImageLoader } from './providers/audio-loader';
+import { ImageLoaderConfig } from './providers/audio-loader-config';
 import { IonicModule } from 'ionic-angular';
 import { File } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 
 @NgModule({
   declarations: [
-    ImgLoader
+    AudioLoader
   ],
   imports: [
     IonicModule
   ],
   exports: [
-    ImgLoader
+    AudioLoader
   ]
 })
-export class IonicImageLoader {
+export class IonicAudioLoader {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: IonicImageLoader,
+      ngModule: IonicAudioLoader,
       providers: [
-        ImageLoaderConfig,
-        ImageLoader,
+        AudioLoaderConfig,
+        AudioLoader,
         File,
         FileTransfer
       ]

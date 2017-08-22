@@ -1,21 +1,21 @@
 import { Component, Input, Output, ElementRef, Renderer, OnInit, EventEmitter } from '@angular/core';
-import { ImageLoader } from '../providers/image-loader';
-import { ImageLoaderConfig } from '../providers/image-loader-config';
+import { AudioLoader } from '../providers/audio-loader';
+import { AudioLoaderConfig } from '../providers/audio-loader-config';
 
 @Component({
-  selector: 'img-loader',
+  selector: 'audio-loader',
   template: '<ion-spinner *ngIf="spinner && isLoading && !fallbackAsPlaceholder" [name]="spinnerName" [color]="spinnerColor"></ion-spinner>',
   styles: ['ion-spinner { float: none; margin-left: auto; margin-right: auto; display: block; }']
 })
-export class ImgLoader implements OnInit {
+export class AudioLoader implements OnInit {
 
   /**
-   * The URL of the image to load.
+   * The URL of the audio to load.
    */
   @Input()
-  set src(imageUrl: string) {
-    this._src = this.processImageUrl(imageUrl);
-    this.updateImage(this._src);
+  set src(audioUrl: string) {
+    this._src = this.processAudioUrl(audioUrl);
+    this.updateAudio(this._src);
   };
 
   get src(): string {
@@ -25,17 +25,17 @@ export class ImgLoader implements OnInit {
   private _src: string;
 
   /**
-   * Fallback URL to load when the image url fails to load or does not exist.
+   * Fallback URL to load when the audio url fails to load or does not exist.
    */
   @Input('fallback') fallbackUrl: string = this._config.fallbackUrl;
 
   /**
-   * Whether to show a spinner while the image loads
+   * Whether to show a spinner while the audio loads
    */
   @Input() spinner: boolean = this._config.spinnerEnabled;
 
   /**
-   * Whether to show the fallback image instead of a spinner while the image loads
+   * Whether to show the fallback audio instead of a spinner while the audio loads
    */
   @Input() fallbackAsPlaceholder: boolean = this._config.fallbackAsPlaceholder;
 
@@ -65,17 +65,17 @@ export class ImgLoader implements OnInit {
   @Input() cache: boolean = true;
 
   /**
-   * Width of the image. This will be ignored if using useImg.
+   * Width of the audio. This will be ignored if using useImg.
    */
   @Input() width: string = this._config.width;
 
   /**
-   * Height of the image. This will be ignored if using useImg.
+   * Height of the audio. This will be ignored if using useImg.
    */
   @Input() height: string = this._config.height;
 
   /**
-   * Display type of the image. This will be ignored if using useImg.
+   * Display type of the audio. This will be ignored if using useImg.
    */
   @Input() display: string = this._config.display;
 
@@ -100,13 +100,13 @@ export class ImgLoader implements OnInit {
   @Input() spinnerColor: string = this._config.spinnerColor;
 
   /**
-   * Notify on image load..
+   * Notify on audio load..
    */
   @Output()
   load: EventEmitter<ImgLoader> = new EventEmitter<ImgLoader>();
 
   /**
-   * Indicates if the image is still loading
+   * Indicates if the audio is still loading
    * @type {boolean}
    */
   isLoading: boolean = true;
@@ -116,65 +116,65 @@ export class ImgLoader implements OnInit {
   constructor(
     private _element: ElementRef,
     private _renderer: Renderer,
-    private _imageLoader: ImageLoader,
-    private _config: ImageLoaderConfig
+    private _audioLoader: AudioLoader,
+    private _config: AudioLoaderConfig
   ) {}
 
   ngOnInit(): void {
     if (this.fallbackAsPlaceholder && this.fallbackUrl) {
-      this.setImage(this.fallbackUrl, false);
+      this.setAudio(this.fallbackUrl, false);
     }
 
     if (!this.src) {
-      // image url was not passed
+      // audio url was not passed
       // this can happen when [src] is set to a variable that turned out to be undefined
       // one example could be a list of users with their profile pictures
-      // in this case, it would be useful to use the fallback image instead
+      // in this case, it would be useful to use the fallback audio instead
       // if fallbackUrl was used as placeholder we do not need to set it again
       if (!this.fallbackAsPlaceholder && this.fallbackUrl) {
-        // we're not going to cache the fallback image since it should be locally saved
-        this.setImage(this.fallbackUrl);
+        // we're not going to cache the fallback audio since it should be locally saved
+        this.setAudio(this.fallbackUrl);
       } else {
         this.isLoading = false;
       }
     }
   }
 
-  private updateImage(imageUrl: string) {
-    this._imageLoader.getImagePath(imageUrl)
-      .then((imageUrl: string) => this.setImage(imageUrl))
-      .catch((error: any) => this.setImage(this.fallbackUrl || imageUrl));
+  private updateAudio(audioUrl: string) {
+    this._audioLoader.getAudioPath(audioUrl)
+      .then((audioUrl: string) => this.setAudio(audioUrl))
+      .catch((error: any) => this.setAudio(this.fallbackUrl || audioUrl));
   }
 
   /**
-   * Gets the image URL to be loaded and disables caching if necessary
+   * Gets the audio URL to be loaded and disables caching if necessary
    * @returns {string}
    */
-  private processImageUrl(imageUrl: string): string {
+  private processAudioUrl(audioUrl: string): string {
     if (this.cache === false) {
       // need to disable caching
 
-      if (imageUrl.indexOf('?') === -1) { // add ? if doesn't exists
-        imageUrl += '?';
+      if (audioUrl.indexOf('?') === -1) { // add ? if doesn't exists
+        audioUrl += '?';
       }
 
-      if (['&', '?'].indexOf(imageUrl.charAt(imageUrl.length)) === -1) { // add & if necessary
-        imageUrl += '&';
+      if (['&', '?'].indexOf(audioUrl.charAt(audioUrl.length)) === -1) { // add & if necessary
+        audioUrl += '&';
       }
 
       // append timestamp at the end to make URL unique
-      imageUrl += 'cache_buster=' + Date.now();
+      audioUrl += 'cache_buster=' + Date.now();
     }
 
-    return imageUrl;
+    return audioUrl;
   }
 
   /**
-   * Set the image to be displayed
-   * @param imageUrl {string} image src
-   * @param stopLoading {boolean} set to true to mark the image as loaded
+   * Set the audio to be displayed
+   * @param audioUrl {string} audio src
+   * @param stopLoading {boolean} set to true to mark the audio as loaded
    */
-  private setImage(imageUrl: string, stopLoading: boolean = true): void {
+  private setAudio(audioUrl: string, stopLoading: boolean = true): void {
     this.isLoading = !stopLoading;
 
     if (this._useImg) {
@@ -186,10 +186,10 @@ export class ImgLoader implements OnInit {
       }
 
       // set it's src
-      this._renderer.setElementAttribute(this.element, 'src', imageUrl);
+      this._renderer.setElementAttribute(this.element, 'src', audioUrl);
 
 
-      if (this.fallbackUrl && !this._imageLoader.nativeAvailable) {
+      if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
         this._renderer.setElementAttribute(this.element, 'onerror', `this.src="${ this.fallbackUrl }"`);
       }
 
@@ -219,7 +219,7 @@ export class ImgLoader implements OnInit {
         this._renderer.setElementStyle(this.element, 'background-repeat', this.backgroundRepeat);
       }
 
-      this._renderer.setElementStyle(this.element, 'background-image', 'url(\'' + ( imageUrl || this.fallbackUrl ) + '\')');
+      this._renderer.setElementStyle(this.element, 'background-audio', 'url(\'' + ( audioUrl || this.fallbackUrl ) + '\')');
     }
 
     this.load.emit(this);

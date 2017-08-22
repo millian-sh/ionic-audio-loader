@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { File, FileEntry, FileError, DirectoryEntry } from '@ionic-native/file';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
-import { ImageLoaderConfig } from "./image-loader-config";
+import { AudioLoaderConfig } from "./audio-loader-config";
 import { Platform } from 'ionic-angular';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
@@ -14,13 +14,13 @@ interface IndexItem {
 }
 
 interface QueueItem {
-  imageUrl: string;
+  audioUrl: string;
   resolve: Function;
   reject: Function;
 }
 
 @Injectable()
-export class ImageLoader {
+export class AudioLoader {
 
   get nativeAvailable(): boolean {
     return File.installed() && FileTransfer.installed();
@@ -28,7 +28,7 @@ export class ImageLoader {
 
   /**
    * Indicates if the cache service is ready.
-   * When the cache service isn't ready, images are loaded via browser instead.
+   * When the cache service isn't ready, audios are loaded via browser instead.
    * @type {boolean}
    */
   private isCacheReady: boolean = false;
@@ -75,7 +75,7 @@ export class ImageLoader {
   }
 
   constructor(
-    private config: ImageLoaderConfig,
+    private config: AudioLoaderConfig,
     private file: File,
     private fileTransfer: FileTransfer,
     private platform: Platform
@@ -85,7 +85,7 @@ export class ImageLoader {
         // we are running on a browser, or using livereload
         // plugin will not function in this case
         this.isInit = true;
-        this.throwWarning('You are running on a browser or using livereload, IonicImageLoader will not function, falling back to browser loading.');
+        this.throwWarning('You are running on a browser or using livereload, IonicAudioLoader will not function, falling back to browser loading.');
       } else {
         Observable.fromEvent(document, 'deviceready').first().subscribe(res => {
           if (this.nativeAvailable) {
@@ -94,7 +94,7 @@ export class ImageLoader {
             // we are running on a browser, or using livereload
             // plugin will not function in this case
             this.isInit = true;
-            this.throwWarning('You are running on a browser or using livereload, IonicImageLoader will not function, falling back to browser loading.');
+            this.throwWarning('You are running on a browser or using livereload, IonicAudioLoader will not function, falling back to browser loading.');
           }
         })
       }
@@ -102,12 +102,12 @@ export class ImageLoader {
   }
 
   /**
-   * Preload an image
-   * @param imageUrl {string} Image URL
-   * @returns {Promise<string>} returns a promise that resolves with the cached image URL
+   * Preload an audio
+   * @param audioUrl {string} Audio URL
+   * @returns {Promise<string>} returns a promise that resolves with the cached audio URL
    */
-  preload(imageUrl: string): Promise<string> {
-    return this.getImagePath(imageUrl);
+  preload(audioUrl: string): Promise<string> {
+    return this.getAudioPath(audioUrl);
   }
 
   /**
@@ -157,25 +157,25 @@ export class ImageLoader {
   }
 
   /**
-   * Gets the filesystem path of an image.
+   * Gets the filesystem path of an audio.
    * This will return the remote path if anything goes wrong or if the cache service isn't ready yet.
-   * @param imageUrl {string} The remote URL of the image
-   * @returns {Promise<string>} Returns a promise that will always resolve with an image URL
+   * @param audioUrl {string} The remote URL of the audio
+   * @returns {Promise<string>} Returns a promise that will always resolve with an audio URL
    */
-  getImagePath(imageUrl: string): Promise<string> {
+  getAudioPath(audioUrl: string): Promise<string> {
 
-    if (typeof imageUrl !== 'string' || imageUrl.length <= 0) {
-      return Promise.reject('The image url provided was empty or invalid.');
+    if (typeof audioUrl !== 'string' || audioUrl.length <= 0) {
+      return Promise.reject('The audio url provided was empty or invalid.');
     }
 
     return new Promise<string>((resolve, reject) => {
 
-      const getImage = () => {
-        this.getCachedImagePath(imageUrl)
+      const getAudio = () => {
+        this.getCachedAudioPath(audioUrl)
           .then(resolve)
           .catch(() => {
-            // image doesn't exist in cache, lets fetch it and save it
-            this.addItemToQueue(imageUrl, resolve, reject);
+            // audio doesn't exist in cache, lets fetch it and save it
+            this.addItemToQueue(audioUrl, resolve, reject);
           });
 
       };
@@ -183,10 +183,10 @@ export class ImageLoader {
       const check = () => {
         if (this.isInit) {
           if (this.isCacheReady) {
-            getImage();
+            getAudio();
           } else {
-            this.throwWarning('The cache system is not running. Images will be loaded by your browser instead.');
-            resolve(imageUrl);
+            this.throwWarning('The cache system is not running. Audio files will be loaded by your browser instead.');
+            resolve(audioUrl);
           }
         } else {
           setTimeout(() => check(), 250);
@@ -201,14 +201,14 @@ export class ImageLoader {
 
   /**
    * Add an item to the queue
-   * @param imageUrl
+   * @param audioUrl
    * @param resolve
    * @param reject
    */
-  private addItemToQueue(imageUrl: string, resolve, reject): void {
+  private addItemToQueue(audioUrl: string, resolve, reject): void {
 
     this.queue.push({
-      imageUrl,
+      audioUrl,
       resolve,
       reject
     });
@@ -264,14 +264,14 @@ export class ImageLoader {
       this.processQueue();
     };
 
-    const localPath = this.file.cacheDirectory + this.config.cacheDirectoryName + '/' + this.createFileName(currentItem.imageUrl);
+    const localPath = this.file.cacheDirectory + this.config.cacheDirectoryName + '/' + this.createFileName(currentItem.audioUrl);
 
-    transfer.download(currentItem.imageUrl, localPath)
+    transfer.download(currentItem.audioUrl, localPath)
       .then((file: FileEntry) => {
         if (this.shouldIndex) {
           this.addFileToIndex(file).then(this.maintainCacheSize.bind(this));
         }
-        return this.getCachedImagePath(currentItem.imageUrl);
+        return this.getCachedAudioPath(currentItem.audioUrl);
       })
       .then((localUrl) => {
         currentItem.resolve(localUrl);
@@ -369,7 +369,7 @@ export class ImageLoader {
   /**
    * This method runs every time a new file is added.
    * It checks the cache size and ensures that it doesn't exceed the maximum cache size set in the config.
-   * If the limit is reached, it will delete old images to create free space.
+   * If the limit is reached, it will delete old audios to create free space.
    */
   private maintainCacheSize(): void {
 
@@ -421,11 +421,11 @@ export class ImageLoader {
   }
 
   /**
-   * Get the local path of a previously cached image if exists
-   * @param url {string} The remote URL of the image
+   * Get the local path of a previously cached audio if exists
+   * @param url {string} The remote URL of the audio
    * @returns {Promise<string>} Returns a promise that resolves with the local path if exists, or rejects if doesn't exist
    */
-  private getCachedImagePath(url: string): Promise<string> {
+  private getCachedAudioPath(url: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
 
       // make sure cache is ready
@@ -445,7 +445,7 @@ export class ImageLoader {
         .then((fileEntry: FileEntry) => {
           // file exists in cache
 
-          if (this.config.imageReturnType === 'base64') {
+          if (this.config.audioReturnType === 'base64') {
 
             // read the file as data url and return the base64 string.
             // should always be successful as the existence of the file
@@ -458,7 +458,7 @@ export class ImageLoader {
               })
               .catch(reject);
 
-          } else if (this.config.imageReturnType === 'uri') {
+          } else if (this.config.audioReturnType === 'uri') {
 
             // now check if iOS device & using WKWebView Engine.
             // in this case only the tempDirectory is accessible,
@@ -509,7 +509,7 @@ export class ImageLoader {
    */
   private throwError(...args: any[]): void {
     if (this.config.debugMode) {
-      args.unshift('ImageLoader Error: ');
+      args.unshift('AudioLoader Error: ');
       console.error.apply(console, args);
     }
   }
@@ -520,7 +520,7 @@ export class ImageLoader {
    */
   private throwWarning(...args: any[]): void {
     if (this.config.debugMode) {
-      args.unshift('ImageLoader Warning: ');
+      args.unshift('AudioLoader Warning: ');
       console.warn.apply(console, args);
     }
   }

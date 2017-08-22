@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class ImageLoaderConfig {
+export class AudioLoaderConfig {
 
   debugMode: boolean = false;
 
@@ -29,13 +29,13 @@ export class ImageLoaderConfig {
 
   maxCacheAge: number = -1;
 
-  imageReturnType: 'base64' | 'uri' = 'uri';
+  audioReturnType: 'base64' | 'uri' = 'uri';
 
   spinnerName: string;
 
   spinnerColor: string;
 
-  private _cacheDirectoryName: string = 'image-loader-cache';
+  private _cacheDirectoryName: string = 'audio-loader-cache';
 
   set cacheDirectoryName(name: string) {
     name.replace(/\W/g, '');
@@ -62,7 +62,7 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Enable/Disable the fallback image as placeholder instead of the spinner. Defaults to false.
+   * Enable/Disable the fallback audio as placeholder instead of the spinner. Defaults to false.
    * @param enable {boolean} set to true to enable
    */
   enableFallbackAsPlaceholder(enable: boolean): void {
@@ -70,7 +70,7 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Sets the cache directory name. Defaults to 'image-loader-cache'
+   * Sets the cache directory name. Defaults to 'audio-loader-cache'
    * @param name {string} name of directory
    */
   setCacheDirectoryName(name: string): void {
@@ -78,7 +78,7 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Set default height for images that are not using <img> tag
+   * Set default height for audios that are not using <img> tag
    * @param height {string} height
    */
   setHeight(height: string): void {
@@ -86,7 +86,7 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Set default width for images that are not using <img> tag
+   * Set default width for audios that are not using <img> tag
    * @param width {string} Width
    */
   setWidth(width: string): void {
@@ -94,7 +94,7 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Enable display mode for images that are not using <img> tag
+   * Enable display mode for audios that are not using <img> tag
    * @param display {string} Display mode
    */
   setDisplay(display: string): void {
@@ -105,12 +105,12 @@ export class ImageLoaderConfig {
    * Use <img> tag by default
    * @param use {boolean} set to true to use <img> tag by default
    */
-  useImageTag(use: boolean): void {
+  useAudioTag(use: boolean): void {
     this.useImg = use;
   }
 
   /**
-   * Set default background size for images that are not using <img> tag
+   * Set default background size for audios that are not using <img> tag
    * @param backgroundSize {string} Background size
    */
   setBackgroundSize(backgroundSize: string): void {
@@ -118,7 +118,7 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Set background repeat for images that are not using <img> tag
+   * Set background repeat for audios that are not using <img> tag
    * @param backgroundRepeat {string} Background repeat
    */
   setBackgroundRepeat(backgroundRepeat: string): void {
@@ -126,9 +126,9 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Set fallback URL to use when image src is undefined or did not resolve.
-   * This image will not be cached. This should ideally be a locally saved image.
-   * @param fallbackUrl {string} The remote or local URL of the image
+   * Set fallback URL to use when audio src is undefined or did not resolve.
+   * This audio will not be cached. This should ideally be a locally saved audio.
+   * @param fallbackUrl {string} The remote or local URL of the audio
    */
   setFallbackUrl(fallbackUrl: string): void {
     this.fallbackUrl = fallbackUrl;
@@ -159,11 +159,11 @@ export class ImageLoaderConfig {
   }
 
   /**
-   * Set the return type of cached images
-   * @param imageReturnType {string} The return type; either 'base64' or 'uri'
+   * Set the return type of cached audios
+   * @param audioReturnType {string} The return type; either 'base64' or 'uri'
    */
-  setImageReturnType(imageReturnType: 'base64' | 'uri'): void {
-    this.imageReturnType = imageReturnType;
+  setAudioReturnType(audioReturnType: 'base64' | 'uri'): void {
+    this.audioReturnType = audioReturnType;
   }
 
   /**
