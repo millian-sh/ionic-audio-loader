@@ -141,6 +141,7 @@ var AudLoader = (function () {
             // append timestamp at the end to make URL unique
             audioUrl += 'cache_buster=' + Date.now();
         }
+        console.log('processing audio url: ' + audioUrl);
         return audioUrl;
     };
     /**
@@ -152,37 +153,14 @@ var AudLoader = (function () {
         if (stopLoading === void 0) { stopLoading = true; }
         this.isLoading = !stopLoading;
         console.log('creating audio attribute');
-        if (this._useImg) {
-            // Using <img> tag
-            if (!this.element) {
-                // create img element if we dont have one
-                this.element = this._renderer.createElement(this._element.nativeElement, 'audio');
-            }
-            // set it's src
-            this._renderer.setElementAttribute(this.element, 'src', audioUrl);
-            if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
-                this._renderer.setElementAttribute(this.element, 'onerror', "this.src=\"" + this.fallbackUrl + "\"");
-            }
+        if (!this.element) {
+            // create img element if we dont have one
+            this.element = this._renderer.createElement(this._element.nativeElement, 'audio');
         }
-        else {
-            // Not using <img> tag
-            this.element = this._element.nativeElement;
-            if (this.display) {
-                this._renderer.setElementStyle(this.element, 'display', this.display);
-            }
-            if (this.height) {
-                this._renderer.setElementStyle(this.element, 'height', this.height);
-            }
-            if (this.width) {
-                this._renderer.setElementStyle(this.element, 'width', this.width);
-            }
-            if (this.backgroundSize) {
-                this._renderer.setElementStyle(this.element, 'background-size', this.backgroundSize);
-            }
-            if (this.backgroundRepeat) {
-                this._renderer.setElementStyle(this.element, 'background-repeat', this.backgroundRepeat);
-            }
-            this._renderer.setElementStyle(this.element, 'background-audio', 'url(\'' + (audioUrl || this.fallbackUrl) + '\')');
+        // set it's src
+        this._renderer.setElementAttribute(this.element, 'src', audioUrl);
+        if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
+            this._renderer.setElementAttribute(this.element, 'onerror', "this.src=\"" + this.fallbackUrl + "\"");
         }
         this.load.emit(this);
     };

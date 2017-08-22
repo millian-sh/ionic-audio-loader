@@ -154,6 +154,8 @@ export class AudLoader implements OnInit {
    * @returns {string}
    */
   private processAudioUrl(audioUrl: string): string {
+
+
     if (this.cache === false) {
       // need to disable caching
 
@@ -169,6 +171,8 @@ export class AudLoader implements OnInit {
       audioUrl += 'cache_buster=' + Date.now();
     }
 
+    console.log('processing audio url: ' + audioUrl);
+
     return audioUrl;
   }
 
@@ -178,53 +182,22 @@ export class AudLoader implements OnInit {
    * @param stopLoading {boolean} set to true to mark the audio as loaded
    */
   private setAudio(audioUrl: string, stopLoading: boolean = true): void {
+
     this.isLoading = !stopLoading;
 
     console.log('creating audio attribute');
 
-    if (this._useImg) {
-      
-      // Using <img> tag
-      if (!this.element) {
-        // create img element if we dont have one
-        this.element = this._renderer.createElement(this._element.nativeElement, 'audio');
-      }
+    if (!this.element) {
+      // create img element if we dont have one
+      this.element = this._renderer.createElement(this._element.nativeElement, 'audio');
+    }
 
-      // set it's src
-      this._renderer.setElementAttribute(this.element, 'src', audioUrl);
+    // set it's src
+    this._renderer.setElementAttribute(this.element, 'src', audioUrl);
 
 
-      if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
-        this._renderer.setElementAttribute(this.element, 'onerror', `this.src="${ this.fallbackUrl }"`);
-      }
-
-    } else {
-
-      // Not using <img> tag
-
-      this.element = this._element.nativeElement;
-
-      if (this.display) {
-        this._renderer.setElementStyle(this.element, 'display', this.display);
-      }
-
-      if (this.height) {
-        this._renderer.setElementStyle(this.element, 'height', this.height);
-      }
-
-      if (this.width) {
-        this._renderer.setElementStyle(this.element, 'width', this.width);
-      }
-
-      if (this.backgroundSize) {
-        this._renderer.setElementStyle(this.element, 'background-size', this.backgroundSize);
-      }
-
-      if (this.backgroundRepeat) {
-        this._renderer.setElementStyle(this.element, 'background-repeat', this.backgroundRepeat);
-      }
-
-      this._renderer.setElementStyle(this.element, 'background-audio', 'url(\'' + ( audioUrl || this.fallbackUrl ) + '\')');
+    if (this.fallbackUrl && !this._audioLoader.nativeAvailable) {
+      this._renderer.setElementAttribute(this.element, 'onerror', `this.src="${ this.fallbackUrl }"`);
     }
 
     this.load.emit(this);
