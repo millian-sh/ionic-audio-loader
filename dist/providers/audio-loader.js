@@ -252,6 +252,7 @@ var AudioLoader = (function () {
      */
     AudioLoader.prototype.initCache = function (replace) {
         var _this = this;
+        console.log('initializing audio loader cache');
         this.concurrency = this.config.concurrency;
         // create cache directories if they do not exist
         this.createCacheDirectory(replace)

@@ -291,6 +291,8 @@ export class AudioLoader {
    */
   private initCache(replace?: boolean): void {
 
+    console.log('initializing audio loader cache');
+
     this.concurrency = this.config.concurrency;
 
     // create cache directories if they do not exist

@@ -100,6 +100,7 @@ var AudLoader = (function () {
         configurable: true
     });
     AudLoader.prototype.ngOnInit = function () {
+        console.log('initializing audio-loader');
         if (this.fallbackAsPlaceholder && this.fallbackUrl) {
             this.setAudio(this.fallbackUrl, false);
         }
@@ -150,6 +151,7 @@ var AudLoader = (function () {
     AudLoader.prototype.setAudio = function (audioUrl, stopLoading) {
         if (stopLoading === void 0) { stopLoading = true; }
         this.isLoading = !stopLoading;
+        console.log('creating audio attribute');
         if (this._useImg) {
             // Using <img> tag
             if (!this.element) {

@@ -121,6 +121,9 @@ export class AudLoader implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    console.log('initializing audio-loader');
+
     if (this.fallbackAsPlaceholder && this.fallbackUrl) {
       this.setAudio(this.fallbackUrl, false);
     }
@@ -176,6 +179,8 @@ export class AudLoader implements OnInit {
    */
   private setAudio(audioUrl: string, stopLoading: boolean = true): void {
     this.isLoading = !stopLoading;
+
+    console.log('creating audio attribute');
 
     if (this._useImg) {
       
